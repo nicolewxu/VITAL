@@ -29,7 +29,7 @@ void setupUSB(void);
 void debug_ADC_sums(int timer_3_cnt, long VRightSum,long VLeftSum, long HLeftSum, long HRightSum );
 void debug_ADC_vals(int  Calibration,  long VRightSum,long VLeftSum, long HLeftSum, long HRightSum );
 
-bool debug_ADC = true ;
+bool debug_ADC = false ;
 //////////////////////////////////////////////////
 //
 // 	drive Modes

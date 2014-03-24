@@ -59,7 +59,7 @@ char 		send_buffer[p_length]	=	{0};
 	else if ( L_bump && !R_bump ) 	{ double_joy 	= true;}
 	else if ( !L_bump && !R_bump ) 	{ single_joy 	= true;}
 */
-bool RF_debug = false ;
+bool RF_debug = true ;
 
 float motor_smooth = .25;
 int lastRight=0;
