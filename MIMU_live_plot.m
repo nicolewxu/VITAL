@@ -93,12 +93,12 @@ try
         [m2_ax, remain] = strtok(m2_buffer);
         [m2_ay, remain2] = strtok(remain);
         [m2_az, remain3] = strtok(remain2);
-        [m2_gx, remain4] = strtok(remain3);
-        [m2_gy, remain5] = strtok(remain4);
-        [m2_gz, remain6] = strtok(remain5);
-        [m2_mx, remain7] = strtok(remain6);
-        [m2_mz, remain8] = strtok(remain7);
-        [m2_my] = strtok(remain8);
+        [m2_gx] = strtok(remain3);
+%         [m2_gy, remain5] = strtok(remain4);
+%         [m2_gz, remain6] = strtok(remain5);
+%         [m2_mx, remain7] = strtok(remain6);
+%         [m2_mz, remain8] = strtok(remain7);
+%         [m2_my] = strtok(remain8);
         m2_buffer;
         time = toc; % Stamp the time the value was received
         
@@ -107,11 +107,11 @@ try
         IMU_ay = [str2double(m2_ay) IMU_ay(1:maxPoints-1)] ;
         IMU_az = [str2double(m2_az) IMU_az(1:maxPoints-1)] ;
         IMU_gx = [str2double(m2_gx) IMU_gx(1:maxPoints-1)] ;
-        IMU_gy = [str2double(m2_gy) IMU_gy(1:maxPoints-1)] ;
-        IMU_gz = [str2double(m2_gz) IMU_gz(1:maxPoints-1)] ;
-        IMU_mx = [str2double(m2_mx) IMU_mx(1:maxPoints-1)] ;
-        IMU_my = [str2double(m2_my) IMU_my(1:maxPoints-1)] ;
-        IMU_mz = [str2double(m2_mz) IMU_mz(1:maxPoints-1)] ;
+%         IMU_gy = [str2double(m2_gy) IMU_gy(1:maxPoints-1)] ;
+%         IMU_gz = [str2double(m2_gz) IMU_gz(1:maxPoints-1)] ;
+%         IMU_mx = [str2double(m2_mx) IMU_mx(1:maxPoints-1)] ;
+%         IMU_my = [str2double(m2_my) IMU_my(1:maxPoints-1)] ;
+%         IMU_mz = [str2double(m2_mz) IMU_mz(1:maxPoints-1)] ;
         
         %% Plotting
         figure(1);
@@ -121,7 +121,7 @@ try
         title('IMU values');
         
         
-        subplot(3,1,1);
+%         subplot(3,1,1);
         hold on
         xlabel('Time');
         ylabel('accelerations');        
@@ -129,25 +129,26 @@ try
         plot(t, IMU_ax,':or','LineWidth',2);
         plot(t, IMU_ay,':og','LineWidth',2);
         plot(t, IMU_az,':om','LineWidth',2);
-        
-        subplot(3,1,2);
-        hold on
-        xlabel('Time');
-        ylabel('gyros');  
-        axis([0 maxPoints -(2^15) 2^15]);
-        plot(t, IMU_gx,'-*r','LineWidth',2);
-        plot(t, IMU_gy,'-*g','LineWidth',2);
-        plot(t, IMU_gz,'-*m','LineWidth',2);
-
-        subplot(3,1,3);
-        hold on
-        xlabel('Time');
-        ylabel('magnetometer');
-        axis([0 maxPoints -(2^10) 2^10]);
-        plot(t, IMU_mx,'--r','LineWidth',2);
-        plot(t, IMU_my,'--g','LineWidth',2);
-        plot(t, IMU_mz,'--m','LineWidth',2);
-        
+        plot(t, IMU_gx,'-*k','LineWidth',2);
+% 
+%         subplot(3,1,2);
+%         hold on
+%         xlabel('Time');
+%         ylabel('gyros');  
+%         axis([0 maxPoints -(2^15) 2^15]);
+%         plot(t, IMU_gx,'-*r','LineWidth',2);
+%         plot(t, IMU_gy,'-*g','LineWidth',2);
+%         plot(t, IMU_gz,'-*m','LineWidth',2);
+% 
+%         subplot(3,1,3);
+%         hold on
+%         xlabel('Time');
+%         ylabel('magnetometer');
+%         axis([0 maxPoints -(2^10) 2^10]);
+%         plot(t, IMU_mx,'--r','LineWidth',2);
+%         plot(t, IMU_my,'--g','LineWidth',2);
+%         plot(t, IMU_mz,'--m','LineWidth',2);
+%         
 
 
         grid on
