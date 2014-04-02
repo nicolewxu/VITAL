@@ -33,7 +33,7 @@ close all;
 
 
 %% VARIABLES
-maxPoints = 20;         % Max number of data points displayed at a time.
+maxPoints = 200;         % Max number of data points displayed at a time.
 t = 1:1:maxPoints;      % Create an evenly spaced matrix for X-axis.
 IMU_Log = zeros(9,2);   % IMU data points logged here in format: [time ADC_Value]
 IMU_live_plot_log = zeros(maxPoints,1); % Create an array to store ADC values.
@@ -99,8 +99,8 @@ try
 %         [m2_mx, remain7] = strtok(remain6);
 %         [m2_mz, remain8] = strtok(remain7);
 %         [m2_my] = strtok(remain8);
-        m2_buffer
-        time = toc; % Stamp the time the value was received
+%         m2_buffer
+        time = toc % Stamp the time the value was received
         
         % Remove the oldest entry.
         IMU_ax = [str2double(m2_ax) IMU_ax(1:maxPoints-1)] ;
@@ -125,11 +125,28 @@ try
         hold on
         xlabel('Time');
         ylabel('accelerations');        
-        axis([0 maxPoints -1024 1024]);
-        plot(t, IMU_ax,':or','LineWidth',2);
-        plot(t, IMU_ay,':og','LineWidth',2);
-        plot(t, IMU_az,':om','LineWidth',2);
-        plot(t, IMU_gx,'-*k','LineWidth',2);
+        axis([0 maxPoints -Inf Inf]);
+       % IMU_sum = IMU_ax + IMU_az;
+        Fs = 33;
+        order = 2;
+        fc = 500;
+        wn = 0.04; LOWPASS
+%         wn = 0.0066; HIGHPASS
+%         wn = [0.04 0.0066]; BANDPASS
+%         [N,D] = butter(order, wn, 'bandpass');
+        [N,D] = butter(order, wn, 'low');
+        y = IMU_ax + IMU_ay + IMU_az + IMU_gx;
+        y2 = filter(N,D,y);
+%         IMU_ax2 = filter(N,D,IMU_ax);
+%         IMU_ay2 = filter(N,D,IMU_ay);
+%         IMU_az2 = filter(N,D,IMU_az);
+%         IMU_gx2 = filter(N,D,IMU_gx);
+%         plot(t, IMU_ax2,':or','LineWidth',2);
+%         plot(t, IMU_ay2,':og','LineWidth',2);
+%         plot(t, IMU_az2,':om','LineWidth',2);
+%         plot(t, IMU_gx2,'-*k','LineWidth',2);
+          plot(t, y2, ':xb', 'LineWidth',2);
+        
 % 
 %         subplot(3,1,2);
 %         hold on
