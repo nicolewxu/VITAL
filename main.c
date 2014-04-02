@@ -13,46 +13,27 @@
 #include <stdlib.h>
 #include "m_wireless.h"
 
+// ls /dev/tty.*
+// screen /dev/tty.usbmodem411
+
 void setup_timer_3();
-
-//////////////////////////////////////////////////
-//
-// 	Interface
-//
-//////////////////////////////////////////////////
-
 void setup_pins(void);
 void update_ADC( int,int,int,int);
 void check_buttons(void);
 void setupUSB(void);
-
 void debug_ADC_sums(int timer_3_cnt, long VRightSum,long VLeftSum, long HLeftSum, long HRightSum );
 void debug_ADC_vals(int  Calibration,  long VRightSum,long VLeftSum, long HLeftSum, long HRightSum );
-
-bool debug_ADC = false ;
-//////////////////////////////////////////////////
-//
-// 	drive Modes
-//
-//////////////////////////////////////////////////
 void set_drive_mode( bool L_bump, bool R_bump);
-
-bool Mario 		= 	false;
-bool single_joy 	= 	false;
-bool double_joy 	= 	false;
-bool tank_mode	 	= 	false;
-
-
-//////////////////////////////////////////////////
-//
-// 	Comm Stuff
-//
-//////////////////////////////////////////////////
-
 void TX_comm(void);
 void deal_with_new(void );
 
-char 	new	 		=	0;
+bool debug_ADC = true ;
+// bool Mario 		= 	false;
+// bool single_joy 	= 	false;
+// bool double_joy 	= 	false;
+// bool tank_mode	 	= 	false;
+
+//char 	new	 		=	0;
 char 	receive_buffer[p_length]=	{0}	;
 char 	send_buffer[p_length]	=	{0} 	;   // [ leftB, rightB, VLadc, = , VRadc, = , HLadc, =,  HRadc, =, _  ]
 
@@ -78,11 +59,6 @@ int main(void) {
 	long HLeftSum=0;
 	long VRightSum=0;
 	long HRightSum=0;
-//	int  VLeftSum=0;
-//	int  HLeftSum=0;
-//	int  VRightSum=0;
-//	int  HRightSum=0;
-
 
 	int cnt_RB = 0;
 	int cnt_LB = 0;
@@ -106,6 +82,7 @@ int main(void) {
 
 	m_red(ON);
 
+
 	for (timer_3_cnt=0 ; timer_3_cnt<Calibration ; ){
 		if(check(TIFR3,OCF3A)){		 ///// timer 3 runs at 100Hz
 			set(TIFR3,OCF3A );
@@ -123,13 +100,11 @@ int main(void) {
 		VRightSum += *(int*)(&send_buffer[4]);
 		HRightSum += *(int*)(&send_buffer[8]);
 
-//		if (debug_ADC){while(!m_usb_rx_available()); m_usb_rx_flush();}
+		if (debug_ADC){while(!m_usb_rx_available()); m_usb_rx_flush();}
 		if (debug_ADC){debug_ADC_sums( timer_3_cnt,  VRightSum, VLeftSum,  HLeftSum,  HRightSum );}
 		}
 	}
-
-	// if (debug_ADC){while(!m_usb_rx_available()); m_usb_rx_flush();}
-
+// if (debug_ADC){while(!m_usb_rx_available()); m_usb_rx_flush();}
 //	int VLeftOffset = (int)(VLeftSum/Calibration);
 //	int HLeftOffset = (int)(HLeftSum/Calibration);
 //	int VRightOffset= (int)(VRightSum/Calibration);
@@ -145,7 +120,7 @@ int main(void) {
 
 
 	if (debug_ADC){while(!m_usb_rx_available()); m_usb_rx_flush();}
-	if (debug_ADC){debug_ADC_vals( Calibration,   VRightSum, VLeftSum,  HLeftSum,  HRightSum );}
+	// if (debug_ADC){debug_ADC_vals( Calibration,   VRightSum, VLeftSum,  HLeftSum,  HRightSum );}
 	m_green(0);
 	m_red(OFF);
 
@@ -155,7 +130,10 @@ int main(void) {
 		check_buttons();
 		update_ADC( VLeftOffset,HLeftOffset,VRightOffset,HRightOffset );
 		TX_comm();
-		if (debug_ADC){deal_with_new();}
+		if (debug_ADC && m_usb_rx_available()){
+			m_usb_rx_flush();
+			deal_with_new();
+		}
 	}
 }
 void set_drive_mode( bool L_bump, bool R_bump){
@@ -328,27 +306,12 @@ void deal_with_new(void ){
 	new = 0;
 	int i; int a;
 
-	if (send_buffer[11] == 1 ){ m_usb_tx_string("Single Joystick Driving\t"); }
-	if (send_buffer[11] ==11 ){ m_usb_tx_string("Double Joystick Driving\t"); }
-	if (send_buffer[11] ==64 ){ m_usb_tx_string("Mario Kart RACING!\t"); }
-	if (send_buffer[11] == 3 ){ m_usb_tx_string("Keyboard control \t"); }
-
-	m_usb_tx_string("Button L:  ");
-	if (send_buffer[1]==1)	{m_usb_tx_string(" on"); }
-	else 			{m_usb_tx_string("off");}
-	m_usb_tx_string(": \t");
-
-	m_usb_tx_string("\tButton R:  ");
-	if (send_buffer[0]==1)	{m_usb_tx_string(" on") ;}
-	else 			{m_usb_tx_string("off");}
-	m_usb_tx_string(": \t");
-
-	for (i=0; i < 4 ; i++){
-		m_usb_tx_string("\tpot ");
-		m_usb_tx_int(i*2+1);
-		m_usb_tx_string(": \t");
+		for (i=0; i < 4 ; i++){
+		// m_usb_tx_string("\tpot: ");
+		// m_usb_tx_int(i*2+1);
 		a = *(int*)&send_buffer[i*2+2];
 		m_usb_tx_int(a);
-	}
-	m_usb_tx_string("\n\r");
+		m_usb_tx_char('\t');
+	}tx_char('\n');
+	m_usb_
 }
