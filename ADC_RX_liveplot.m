@@ -127,25 +127,25 @@ try
         ylabel('accelerations');        
         axis([0 maxPoints -Inf Inf]);
        % IMU_sum = IMU_ax + IMU_az;
-        Fs = 33;
-        order = 2;
-        fc = 500;
-        wn = 0.04; LOWPASS
+%         Fs = 33;
+%         order = 2;
+%         fc = 500;
+%         wn = 0.04; LOWPASS
 %         wn = 0.0066; HIGHPASS
 %         wn = [0.04 0.0066]; BANDPASS
 %         [N,D] = butter(order, wn, 'bandpass');
-        [N,D] = butter(order, wn, 'low');
-        y = IMU_ax + IMU_ay + IMU_az + IMU_gx;
-        y2 = filter(N,D,y);
+%         [N,D] = butter(order, wn, 'low');
+%         y = IMU_ax + IMU_ay + IMU_az + IMU_gx;
+%         y2 = filter(N,D,y);
 %         IMU_ax2 = filter(N,D,IMU_ax);
 %         IMU_ay2 = filter(N,D,IMU_ay);
 %         IMU_az2 = filter(N,D,IMU_az);
 %         IMU_gx2 = filter(N,D,IMU_gx);
-%         plot(t, IMU_ax2,':or','LineWidth',2);
-%         plot(t, IMU_ay2,':og','LineWidth',2);
-%         plot(t, IMU_az2,':om','LineWidth',2);
-%         plot(t, IMU_gx2,'-*k','LineWidth',2);
-          plot(t, y2, ':xb', 'LineWidth',2);
+         plot(t, IMU_ax,':or','LineWidth',2);
+         plot(t, IMU_ay,':og','LineWidth',2);
+         plot(t, IMU_az,':om','LineWidth',2);
+         plot(t, IMU_gx,'-*k','LineWidth',2);
+%           plot(t, y2, ':xb', 'LineWidth',2);
         
 % 
 %         subplot(3,1,2);
